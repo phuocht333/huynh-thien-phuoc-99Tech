@@ -1,20 +1,16 @@
-import { knex } from 'knex';
+import { Knex, knex } from 'knex';
 
-class KnexSingleton {
-  private static instance: KnexSingleton;
-
-  private constructor() {
-    KnexSingleton.instance = knex({
-      client: 'better-sqlite3',
-      connection: {
-        filename: './problem5.sqlite',
-      }
-    });
-  }
-
-  public static getInstance(): KnexSingleton {
+export class KnexSingleton {
+  private static instance: Knex;
+ 
+  public static getInstance(): Knex {
     if (KnexSingleton.instance === null) {
-      KnexSingleton.instance = new KnexSingleton()
+      KnexSingleton.instance = knex({
+        client: 'better-sqlite3',
+        connection: {
+          filename: './dev.sqlite3',
+        }
+      });
     }
 
     return KnexSingleton.instance

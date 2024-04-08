@@ -1,26 +1,45 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { ITask, Task } from "../entities/Task";
+import { ITaskRepo } from "../models/taskRepo";
+import { TYPES } from "../../config/types";
+import { instanceToPlain, plainToInstance } from "class-transformer";
+
+export interface ITaskUseCase {
+  createTask(task: ITask): Promise<void>;
+  getTasks(): Promise<ITask[]>;
+  getTaskDetail(taskId: string): Promise<ITask>;
+  ditTask(taskId: string, task: Partial<ITask>): Promise<void>;
+  deleteTask(taskId: string): Promise<void>;
+}
 
 @injectable()
 export class TaskUseCase {
-  createTask(task: ITask): void {
-    // TODO
+  constructor(@inject(TYPES.TaskRepo) private taskRepo: ITaskRepo) { }
+
+  async getTasks(): Promise<ITask[]> {
+    const tasks = await this.taskRepo.getTasks();
+    return tasks;
   }
 
-  getTasks(): Task[] {
-    return [];
+  async getTaskDetail(taskId: string): Promise<Promise<Pick<ITask, 'description'>> > {
+    const taskDes = await this.taskRepo.getTaskDetail(taskId);
+    return taskDes;
   }
 
-  getTaskDetail(taskId: string): Task {
-    // TODO
-    return Task.create({ description: '', assignee: '', status: '' });
+  async createTask(task: ITask): Promise<void> {
+    const newTask = Task.create(task);
+    const plainTask = instanceToPlain(newTask) as ITask;
+    console.log(plainTask);
+    await this.taskRepo.createTask(plainTask);
   }
 
-  editTask(taskId:string, task: Partial<ITask>): void {
-    // TODO
+  async editTask(taskId: string, task: Partial<ITask>): Promise<void> {
+    // Edit case: should retrieve the Task & rebuild the Task entity state to ensure valid domain logic. 
+    // But for simple, just edit as a plain object.
+    await this.taskRepo.editTask(taskId, task);
   }
 
-  deleteTask(taskId: string): void {
-    // TODO
+  async deleteTask(taskId: string): Promise<void> {
+    await this.taskRepo.deleteTask(taskId);
   }
 }
