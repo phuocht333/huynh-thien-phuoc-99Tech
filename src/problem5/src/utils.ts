@@ -1,0 +1,1 @@
+export const generateUID = () => Math.random().toString(36).slice(2, 5); // For simplification. Should use uuid instead
