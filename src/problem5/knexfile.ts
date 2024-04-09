@@ -7,7 +7,8 @@ const config: { [key: string]: Knex.Config } = {
     client: "better-sqlite3",
     connection: {
       filename: "./dev.sqlite3"
-    }
+    },
+    useNullAsDefault: false
   },
 
   // staging: {
@@ -44,4 +45,4 @@ const config: { [key: string]: Knex.Config } = {
 
 };
 
-module.exports = config;
+export default config;

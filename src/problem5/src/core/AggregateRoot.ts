@@ -4,7 +4,11 @@ export abstract class AggregateRoot<T> extends Entity<T> {
   // private _domainEvents: IDomainEvent[] = [];
 
   get id(): string {
-    return this._id;
+    return this.id;
+  }
+
+  get props(): T {
+    return this.props;
   }
 
   // TODO Handle domain events => Difference entities will communicate via Domain Events => loose coupling the application

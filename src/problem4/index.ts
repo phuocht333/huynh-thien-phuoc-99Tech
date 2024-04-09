@@ -15,6 +15,7 @@ class SumToN extends AbstractSumToN<number> {
     return this.props;
   }
 
+  // Time complexity: O(n) - Space complexity: O(1)
   execBasicLoop(): number {
     let sum = 0;
     for (let i = 1; i <= this.inputNumb; i++) {
@@ -23,6 +24,7 @@ class SumToN extends AbstractSumToN<number> {
     return sum;
   }
 
+  // Time complexity: O(n) - Space complexity: O(n)
   execRecursion(n?: number): number {
     const curMaxNumb = n || this.inputNumb;
     if (curMaxNumb <= 1) {
@@ -31,6 +33,7 @@ class SumToN extends AbstractSumToN<number> {
     return curMaxNumb + this.execRecursion(curMaxNumb - 1);
   }
 
+  // Time complexity: O(1) - Space complexity: O(1)
   execFormula(): number {
     return (this.inputNumb * (this.inputNumb + 1)) / 2;
   }

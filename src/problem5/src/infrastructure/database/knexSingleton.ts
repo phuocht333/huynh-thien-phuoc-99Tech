@@ -1,16 +1,12 @@
 import { Knex, knex } from 'knex';
+import config from '../../../knexfile';
 
 export class KnexSingleton {
   private static instance: Knex;
  
   public static getInstance(): Knex {
-    if (KnexSingleton.instance === null) {
-      KnexSingleton.instance = knex({
-        client: 'better-sqlite3',
-        connection: {
-          filename: './dev.sqlite3',
-        }
-      });
+    if (!KnexSingleton.instance) {
+      KnexSingleton.instance = knex(config.development);
     }
 
     return KnexSingleton.instance

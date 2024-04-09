@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
-import { ITask, Task } from "../entities/Task";
+import { ITask, TStatus, Task } from "../entities/Task";
 import { ITaskRepo } from "../models/taskRepo";
 import { TYPES } from "../../config/types";
-import { instanceToPlain, plainToInstance } from "class-transformer";
+import { instanceToPlain } from "class-transformer";
 
 export interface ITaskUseCase {
   createTask(task: ITask): Promise<void>;
-  getTasks(): Promise<ITask[]>;
+  getTasks(status?: TStatus): Promise<ITask[]>;
   getTaskDetail(taskId: string): Promise<ITask>;
-  ditTask(taskId: string, task: Partial<ITask>): Promise<void>;
+  editTask(taskId: string, task: Partial<ITask>): Promise<void>;
   deleteTask(taskId: string): Promise<void>;
 }
 
@@ -16,12 +16,12 @@ export interface ITaskUseCase {
 export class TaskUseCase {
   constructor(@inject(TYPES.TaskRepo) private taskRepo: ITaskRepo) { }
 
-  async getTasks(): Promise<ITask[]> {
-    const tasks = await this.taskRepo.getTasks();
+  async getTasks(status: TStatus): Promise<Pick<ITask, "id" | "status" | "assignee">[]> {
+    const tasks = await this.taskRepo.getTasks(status);
     return tasks;
   }
 
-  async getTaskDetail(taskId: string): Promise<Promise<Pick<ITask, 'description'>> > {
+  async getTaskDetail(taskId: string): Promise<Pick<ITask, 'description'>> {
     const taskDes = await this.taskRepo.getTaskDetail(taskId);
     return taskDes;
   }
@@ -29,13 +29,14 @@ export class TaskUseCase {
   async createTask(task: ITask): Promise<void> {
     const newTask = Task.create(task);
     const plainTask = instanceToPlain(newTask) as ITask;
-    console.log(plainTask);
+    console.log('plainTask', plainTask); 
+
     await this.taskRepo.createTask(plainTask);
   }
 
   async editTask(taskId: string, task: Partial<ITask>): Promise<void> {
-    // Edit case: should retrieve the Task & rebuild the Task entity state to ensure valid domain logic. 
-    // But for simple, just edit as a plain object.
+    // For simple, just edit as a plain object.
+    // TODO - Regarding edit case: should retrieve & rebuild the Task entity state to ensure valid domain logic. 
     await this.taskRepo.editTask(taskId, task);
   }
 
