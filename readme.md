@@ -74,5 +74,6 @@ We're cool as long as we can view your solution without any pain.
     + Databases: Redis (separate by keys) and MySQL (separate by tables) 
 
 - To migrate from monolith to microservices, we just replace corresponding parts.
+- Auth service can become a SSO service.
 
 - <em>Note: This is my intentional approach only, need to discuss & improve</em>.
